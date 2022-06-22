@@ -19,17 +19,16 @@ extern crate derive_more;
 extern crate dotenv;
 extern crate env_logger;
 extern crate failure;
-extern crate futures;
 extern crate serde;
 extern crate uuid;
 
 use std::{env, io};
-use actix_cors::Cors;
-use actix_identity::{CookieIdentityPolicy, IdentityService};
-use actix_web::{HttpServer, App, http, web};
+use actix_governor::Governor;
+use actix_web::{HttpServer, App, web};
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
 use dotenv::dotenv;
+use configurations::rate_limiting_governor;
 
 
 mod consts;
@@ -60,29 +59,12 @@ async fn main() -> io::Result<()> {
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())
+            // enable rate-limiting middleware
+            .wrap(Governor::new(&rate_limiting_governor::get_governor()))
             .app_data(Data::new(pool.clone()))
-            .wrap(
-                IdentityService::new(
-                    CookieIdentityPolicy::new(&consts::SECRET_KEY)
-                        .name("auth")
-                        .path("/")
-                        .domain(domain.as_str())
-                        .max_age_secs(chrono::Duration::days(1).num_seconds())
-                        .secure(false), // this can only be true if you have https
-                )
-            )
+            .wrap(configurations::identity::get_config(domain.to_string()))
             .app_data(web::JsonConfig::default().limit(4096))
-            .wrap(
-                Cors::default() // allowed_origin return access-control-allow-origin: * by default
-                    .allowed_origin("http://127.0.0.1:3000")
-                    .allowed_origin("http://localhost:3000")
-                    .send_wildcard()
-                    .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
-                    .allowed_headers(vec![http::header::AUTHORIZATION, http::header::ACCEPT])
-                    .allowed_header(http::header::CONTENT_TYPE)
-                    .max_age(3600),
-            )
-            .service(api::main_controller::index)
+            .wrap(configurations::cors::get_config())
             .configure(configurations::router::configure)
     })
         .bind(&bind_address)

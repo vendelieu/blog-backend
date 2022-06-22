@@ -11,6 +11,7 @@ actix-rt = "2.7.0"
 actix-service = "2.0.2"
 actix-identity = "0.4.0"
 actix-cors = "0.6.1"
+actix-governor = "0.3.0"
 
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"
@@ -19,7 +20,6 @@ log = "0.4.17"
 
 bcrypt = "0.13.0"
 failure = "0.1.8"
-futures = "0.3.21"
 derive_more = "0.99.17"
 
 validator = {version = "0.15.0", features = ["derive"] }

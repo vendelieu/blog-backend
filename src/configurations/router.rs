@@ -4,6 +4,8 @@ use actix_web::web;
 pub fn configure(cfg: &mut web::ServiceConfig) {
     info!("Configuring routes...");
     cfg
+        //main
+        .service(main_controller::index)
         // user
         .service(user_controller::signup)
         .service(user_controller::login)
