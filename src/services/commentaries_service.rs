@@ -10,6 +10,7 @@ use crate::{
 use actix_identity::Identity;
 use actix_web::{http::StatusCode, web};
 use crate::models::filters::CommentaryFilter;
+use crate::models::post::FullPost;
 use crate::models::response::Page;
 
 pub fn filter_by_post_slug(
@@ -25,11 +26,25 @@ pub fn filter_by_post_slug(
 }
 
 pub fn insert(
-    p_id: i32, new_comment: CommentaryDTO, id: Identity, pool: &web::Data<Pool>
+    p_id: i32, new_comment: CommentaryDTO, id: Identity, pool: &web::Data<Pool>,
 ) -> Result<(), ServiceError> {
     let user = match user_service::handle_user_auth(id, &pool.get().unwrap()) {
         Ok(user) => user,
         Err(err) => return Err(err)
+    };
+
+    // check if post exists & open for comments
+    match FullPost::find_by_id(p_id.clone(), &pool.get().unwrap()) {
+        Ok(post) => if !post.commentaries_open {
+            return Err(ServiceError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                consts::MESSAGE_CAN_NOT_INSERT_DATA.to_string(),
+            ));
+        }
+        Err(_) => return Err(ServiceError::new(
+            StatusCode::INTERNAL_SERVER_ERROR,
+            consts::MESSAGE_CAN_NOT_INSERT_DATA.to_string(),
+        ))
     };
 
     match Commentary::insert(CommentaryFullDTO {

@@ -23,8 +23,9 @@ table! {
         id -> Int4,
         title -> Varchar,
         content -> Text,
-        content_html -> Text,
+        short_content -> Nullable<Varchar>,
         slug -> Varchar,
+        commentaries_open -> Bool,
         updated_at -> Timestamp,
         created_at -> Timestamp,
     }

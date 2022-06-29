@@ -8,11 +8,12 @@ use crate::{
 use actix_web::{web, HttpResponse, Result};
 
 #[get("/api/posts")]
-pub async fn find_all(pool: web::Data<Pool>) -> Result<HttpResponse> {
-    match post_service::find_all(&pool) {
-        Ok(posts) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, posts))
-        ),
+pub async fn get_posts(
+    web::Query(filter): web::Query<PostFilter>,
+    pool: web::Data<Pool>,
+) -> Result<HttpResponse> {
+    match post_service::filter(filter, &pool) {
+        Ok(page) => Ok(HttpResponse::Ok().json(page)),
         Err(err) => Ok(err.response()),
     }
 }
@@ -23,17 +24,6 @@ pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Resul
         Ok(post) => Ok(HttpResponse::Ok().json(
             ResponseBody::new(consts::MESSAGE_OK, post))
         ),
-        Err(err) => Ok(err.response()),
-    }
-}
-
-#[get("/api/posts/filter")]
-pub async fn filter(
-    web::Query(filter): web::Query<PostFilter>,
-    pool: web::Data<Pool>,
-) -> Result<HttpResponse> {
-    match post_service::filter(filter, &pool) {
-        Ok(page) => Ok(HttpResponse::Ok().json(page)),
         Err(err) => Ok(err.response()),
     }
 }

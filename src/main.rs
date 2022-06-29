@@ -33,6 +33,7 @@ use configurations::rate_limiting_governor;
 
 mod consts;
 mod schema;
+mod post_view_schema;
 
 mod api;
 mod configurations;
