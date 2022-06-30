@@ -4,7 +4,7 @@ use crate::validator::Validate;
 #[derive(Debug, Deserialize, Validate)]
 pub struct PostFilter {
     pub title: Option<String>,
-    pub text: Option<String>,
+    pub keyword: Option<String>,
     #[validate(length(max = 20))]
     pub tags: Option<String>,
     pub slug: Option<String>,

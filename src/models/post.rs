@@ -54,8 +54,8 @@ impl Post {
         if let Some(i) = filter.title {
             query = query.filter(p_view::title.like(format!("%{}%", i)));
         }
-        if let Some(i) = filter.text {
-            query = query.filter(p_view::short_content.like(format!("%{}%", i)));
+        if let Some(i) = filter.keyword {
+            query = query.filter(p_view::content.like(format!("%{}%", i)));
         }
         if let Some(i) = filter.slug {
             query = query.filter(slug.like(format!("%{}%", i)));
