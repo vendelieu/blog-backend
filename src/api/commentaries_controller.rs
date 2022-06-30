@@ -15,7 +15,7 @@ pub async fn find_by_slug(
 {
     match commentaries_service::filter_by_post_slug(slug.into_inner(), filter, &pool) {
         Ok(comments) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, comments))
+            ResponseBody::new(200, consts::MESSAGE_OK, comments))
         ),
         Err(err) => Ok(err.response()),
     }
@@ -30,7 +30,7 @@ pub async fn insert(
 ) -> Result<HttpResponse> {
     match commentaries_service::insert(p_id.into_inner(), new_comment.0, id, &pool) {
         Ok(()) => Ok(HttpResponse::Created()
-            .json(ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))),
+            .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
         Err(err) => Ok(err.response()),
     }
 }
@@ -47,7 +47,7 @@ pub async fn update(
     ) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),
@@ -63,7 +63,7 @@ pub async fn delete(
     match commentaries_service::delete(id.into_inner(), identity, &pool) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),

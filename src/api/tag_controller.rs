@@ -11,7 +11,7 @@ use actix_web::{web, HttpResponse, Result};
 pub async fn find_all(pool: web::Data<Pool>) -> Result<HttpResponse> {
     match tags_service::find_all(&pool) {
         Ok(tags) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, tags))
+            ResponseBody::new(200, consts::MESSAGE_OK, tags))
         ),
         Err(err) => Ok(err.response()),
     }
@@ -21,7 +21,7 @@ pub async fn find_all(pool: web::Data<Pool>) -> Result<HttpResponse> {
 pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
     match tags_service::find_by_slug(id.into_inner(), &pool) {
         Ok(tag) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, tag))
+            ResponseBody::new(200, consts::MESSAGE_OK, tag))
         ),
         Err(err) => Ok(err.response()),
     }
@@ -31,7 +31,7 @@ pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Resul
 pub async fn find_by_post_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
     match tags_service::find_by_post_slug(id.into_inner(), &pool) {
         Ok(tags) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, tags))
+            ResponseBody::new(200, consts::MESSAGE_OK, tags))
         ),
         Err(err) => Ok(err.response()),
     }
@@ -45,7 +45,7 @@ pub async fn insert(
 ) -> Result<HttpResponse> {
     match tags_service::insert(new_tag.0, id, &pool) {
         Ok(()) => Ok(HttpResponse::Created()
-            .json(ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))),
+            .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
         Err(err) => Ok(err.response()),
     }
 }
@@ -60,7 +60,7 @@ pub async fn update(
     match tags_service::update(id.into_inner(), updated_tag.0, identity, &pool) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),
@@ -76,7 +76,7 @@ pub async fn delete(
     match tags_service::delete(id.into_inner(), identity, &pool) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),

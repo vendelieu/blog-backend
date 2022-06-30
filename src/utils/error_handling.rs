@@ -11,6 +11,7 @@ impl ServiceError {
         ServiceError {
             http_status,
             body: ResponseBody {
+                code: http_status.as_u16().into(),
                 message,
                 data: String::new(),
             },

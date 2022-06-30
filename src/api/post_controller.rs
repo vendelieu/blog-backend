@@ -1,11 +1,12 @@
 use actix_identity::Identity;
+use actix_web::{HttpResponse, Result, web};
+
 use crate::{
     configurations::db::Pool,
     consts,
     models::{filters::PostFilter, post::PostDTO, response::ResponseBody},
     services::post_service,
 };
-use actix_web::{web, HttpResponse, Result};
 
 #[get("/api/posts")]
 pub async fn get_posts(
@@ -22,7 +23,7 @@ pub async fn get_posts(
 pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
     match post_service::find_by_slug(id.into_inner(), &pool) {
         Ok(post) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(consts::MESSAGE_OK, post))
+            ResponseBody::new(200, consts::MESSAGE_OK, post))
         ),
         Err(err) => Ok(err.response()),
     }
@@ -36,7 +37,7 @@ pub async fn insert(
 ) -> Result<HttpResponse> {
     match post_service::insert(new_post.0, id, &pool) {
         Ok(()) => Ok(HttpResponse::Created()
-            .json(ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))),
+            .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
         Err(err) => Ok(err.response()),
     }
 }
@@ -51,7 +52,7 @@ pub async fn update(
     match post_service::update(id.into_inner(), updated_post.0, identity, &pool) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),
@@ -67,7 +68,7 @@ pub async fn delete(
     match post_service::delete(id.into_inner(), identity, &pool) {
         Ok(()) => {
             Ok(HttpResponse::Ok().json(
-                ResponseBody::new(consts::MESSAGE_OK, consts::EMPTY))
+                ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))
             )
         }
         Err(err) => Ok(err.response()),
