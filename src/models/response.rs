@@ -17,6 +17,7 @@ impl<T> ResponseBody<T> {
 
 #[derive(Serialize)]
 pub struct Page<T> {
+    pub code: i32,
     pub message: String,
     pub data: Vec<T>,
     pub page_num: i64,
@@ -33,6 +34,7 @@ impl<T> Page<T> {
         total_elements: i64,
     ) -> Page<T> {
         Page {
+            code: 200,
             message: message.to_string(),
             data,
             page_num,

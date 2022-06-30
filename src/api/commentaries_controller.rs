@@ -1,10 +1,11 @@
 use actix_identity::Identity;
+use actix_web::{HttpResponse, Result, web};
+
 use crate::{
     configurations::db::Pool,
     consts,
-    models::{filters::CommentaryFilter, commentaries::CommentaryDTO, response::ResponseBody},
+    models::{commentaries::CommentaryDTO, filters::CommentaryFilter, response::ResponseBody},
 };
-use actix_web::{web, HttpResponse, Result};
 use crate::services::commentaries_service;
 
 #[get("/api/post/{slug}/commentaries")]
@@ -14,9 +15,7 @@ pub async fn find_by_slug(
     pool: web::Data<Pool>) -> Result<HttpResponse>
 {
     match commentaries_service::filter_by_post_slug(slug.into_inner(), filter, &pool) {
-        Ok(comments) => Ok(HttpResponse::Ok().json(
-            ResponseBody::new(200, consts::MESSAGE_OK, comments))
-        ),
+        Ok(comments) => Ok(HttpResponse::Ok().json(comments)),
         Err(err) => Ok(err.response()),
     }
 }
