@@ -10,7 +10,7 @@ use crate::{
 use actix_identity::Identity;
 use actix_web::{http::StatusCode, web};
 use crate::models::filters::CommentaryFilter;
-use crate::models::post::FullPost;
+use crate::models::post::Post;
 use crate::models::response::Page;
 
 pub fn filter_by_post_slug(
@@ -34,7 +34,7 @@ pub fn insert(
     };
 
     // check if post exists & open for comments
-    match FullPost::find_by_id(p_id.clone(), &pool.get().unwrap()) {
+    match Post::find_by_id(p_id.clone(), &pool.get().unwrap()) {
         Ok(post) => if !post.commentaries_open {
             return Err(ServiceError::new(
                 StatusCode::INTERNAL_SERVER_ERROR,

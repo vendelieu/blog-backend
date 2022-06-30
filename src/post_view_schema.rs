@@ -1,4 +1,7 @@
 #![allow(unused_imports)]
+
+use crate::schema::post_tags_pivot;
+
 table! {
     use diesel::sql_types::*;
     use diesel::prelude::*;
@@ -8,6 +11,7 @@ table! {
     post_view(id) {
         id -> Int4,
         title -> Varchar,
+        content -> Text,
         short_content -> Varchar,
         slug -> Varchar,
         commentaries_open -> Bool,
@@ -18,7 +22,6 @@ table! {
     }
 }
 
-use crate::schema::post_tags_pivot;
 allow_tables_to_appear_in_same_query!(
     post_tags_pivot,
     post_view

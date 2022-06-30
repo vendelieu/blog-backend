@@ -4,17 +4,16 @@ use crate::{
     utils::error_handling::ServiceError,
     models::{
         filters::PostFilter,
-        post::{FullPost, PostDTO},
+        post::{Post, PostDTO},
         response::Page,
     },
     services::user_service,
 };
 use actix_identity::Identity;
 use actix_web::{http::StatusCode, web};
-use crate::models::post::Post;
 
-pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<FullPost, ServiceError> {
-    match FullPost::find_by_slug(&slug, &pool.get().unwrap()) {
+pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<Post, ServiceError> {
+    match Post::find_by_slug(&slug, &pool.get().unwrap()) {
         Ok(post) => Ok(post),
         Err(err) => {
             eprintln!("Error at fetching post data by slug process: {}", err);
@@ -27,7 +26,7 @@ pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<FullPost, Se
 }
 
 pub fn filter(filter: PostFilter, pool: &web::Data<Pool>) -> Result<Page<Post>, ServiceError> {
-    match FullPost::filter(filter, &pool.get().unwrap()) {
+    match Post::filter(filter, &pool.get().unwrap()) {
         Ok(post) => Ok(post),
         Err(err) => {
             eprintln!("Error at fetching post data process: {}", err);
@@ -44,7 +43,7 @@ pub fn insert(new_post: PostDTO, id: Identity, pool: &web::Data<Pool>) -> Result
         id, &pool.get().unwrap(),
     ) { return Err(err); }
 
-    match FullPost::insert(new_post, &pool.get().unwrap()) {
+    match Post::insert(new_post, &pool.get().unwrap()) {
         Ok(_) => Ok(()),
         Err(err) => {
             eprintln!("Error at inserting post data process: {}", err);
@@ -66,8 +65,8 @@ pub fn update(
         identity, &pool.get().unwrap(),
     ) { return Err(err); }
 
-    match FullPost::find_by_id(id, &pool.get().unwrap()) {
-        Ok(_) => match FullPost::update(id, updated_post, &pool.get().unwrap()) {
+    match Post::find_by_id(id, &pool.get().unwrap()) {
+        Ok(_) => match Post::update(id, updated_post, &pool.get().unwrap()) {
             Ok(_) => Ok(()),
             Err(err) => {
                 eprintln!("Error at updating post data process: {}", err);
@@ -94,8 +93,8 @@ pub fn delete(id: i32, identity: Identity, pool: &web::Data<Pool>) -> Result<(),
         identity, &pool.get().unwrap(),
     ) { return Err(err); }
 
-    match FullPost::find_by_id(id, &pool.get().unwrap()) {
-        Ok(_) => match FullPost::delete(id, &pool.get().unwrap()) {
+    match Post::find_by_id(id, &pool.get().unwrap()) {
+        Ok(_) => match Post::delete(id, &pool.get().unwrap()) {
             Ok(_) => Ok(()),
             Err(err) => {
                 eprintln!("Error at deleting post data process: {}", err);
