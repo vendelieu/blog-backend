@@ -10,6 +10,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         .service(user_controller::signup)
         .service(user_controller::login)
         .service(user_controller::logout)
+        .service(user_controller::info)
         // posts
         .service(post_controller::insert)
         .service(post_controller::find_by_slug)

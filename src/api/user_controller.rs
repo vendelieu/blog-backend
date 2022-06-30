@@ -11,6 +11,7 @@ use crate::{
     },
     services::user_service,
 };
+use crate::models::user::{UserInfoDTO};
 
 #[post("/api/auth/signup")]
 pub async fn signup(user_dto: Json<UserDTO>, pool: web::Data<Pool>) -> Result<HttpResponse> {
@@ -25,10 +26,10 @@ pub async fn signup(user_dto: Json<UserDTO>, pool: web::Data<Pool>) -> Result<Ht
 #[post("/api/auth/login")]
 pub async fn login(login_dto: Json<LoginDTO>, id: Identity, pool: web::Data<Pool>) -> Result<HttpResponse> {
     match user_service::login(login_dto.0, id, &pool) {
-        Ok(token_res) => Ok(HttpResponse::Ok().json(ResponseBody::new(
+        Ok(res) => Ok(HttpResponse::Ok().json(ResponseBody::new(
             200,
             consts::MESSAGE_LOGIN_SUCCESS,
-            token_res,
+            res,
         ))),
         Err(err) => Ok(err.response()),
     }
@@ -47,5 +48,27 @@ pub async fn logout(id: Identity, pool: web::Data<Pool>) -> Result<HttpResponse>
             consts::MESSAGE_INVALID_AUTH_DATA,
             consts::EMPTY,
         )))
+    }
+}
+
+#[get("/api/auth/info")]
+pub async fn info(id: Identity, pool: web::Data<Pool>) -> Result<HttpResponse> {
+    match user_service::get_user_by_identity(id, &pool.get().unwrap()) {
+        Ok(user) => Ok(HttpResponse::Ok().json(ResponseBody::new(
+            200,
+            consts::MESSAGE_OK,
+            UserInfoDTO {
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                is_admin: user.is_admin,
+                created_at: user.created_at,
+            },
+        ))),
+        Err(_) => Ok(HttpResponse::Ok().json(ResponseBody::new(
+            200,
+            consts::MESSAGE_INVALID_AUTH_DATA,
+            consts::EMPTY,
+        ))),
     }
 }

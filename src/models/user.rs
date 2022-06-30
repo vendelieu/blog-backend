@@ -29,7 +29,7 @@ pub struct UserDTO {
 
 #[derive(Serialize, Deserialize)]
 pub struct LoginDTO {
-    pub username_or_email: String,
+    pub username: String,
     pub password: String,
 }
 
@@ -38,6 +38,15 @@ pub struct LoginDTO {
 pub struct LoginInfoDTO {
     pub username: String,
     pub login_session: String,
+}
+
+#[derive(Serialize)]
+pub struct UserInfoDTO {
+    pub id: i32,
+    pub username: String,
+    pub email: String,
+    pub is_admin: bool,
+    pub created_at: NaiveDateTime
 }
 
 impl User {
@@ -57,8 +66,7 @@ impl User {
 
     pub fn login(login: LoginDTO, conn: &Connection) -> Option<LoginInfoDTO> {
         if let Ok(user_to_verify) = users
-            .filter(username.eq(&login.username_or_email))
-            .or_filter(email.eq(&login.username_or_email))
+            .filter(username.eq(&login.username))
             .get_result::<User>(conn)
         {
             if !user_to_verify.password.is_empty()
@@ -78,12 +86,7 @@ impl User {
                     );
                 }
             } else {
-                return Some(
-                    LoginInfoDTO {
-                        username: user_to_verify.username,
-                        login_session: String::new(),
-                    }
-                );
+                return None
             }
         }
 
