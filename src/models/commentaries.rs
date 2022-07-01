@@ -11,14 +11,12 @@ use diesel::prelude::*;
 use crate::models::filters::CommentaryFilter;
 use crate::models::response::Page;
 
-use crate::schema::posts::{self, dsl::*};
-
 
 #[derive(Queryable, Serialize, Deserialize)]
 pub struct Commentary {
     pub id: i32,
-    pub post_id: i32,
-    pub user_id: i32,
+    pub post_slug: String,
+    pub username: String,
     pub text: String,
     pub reply_to: Option<i32>,
     pub updated_at: NaiveDateTime,
@@ -34,8 +32,8 @@ pub struct CommentaryDTO {
 #[derive(Insertable, AsChangeset)]
 #[table_name = "commentaries"]
 pub struct CommentaryFullDTO {
-    pub post_id: i32,
-    pub user_id: i32,
+    pub post_slug: String,
+    pub username: String,
     pub text: String,
     pub reply_to: Option<i32>,
 }
@@ -49,12 +47,10 @@ impl Commentary {
         let mut query = commentaries::table.into_boxed();
 
 
-        query = query.filter(post_id.eq_any(
-            posts.select(posts::id).filter(slug.eq(s))
-        ));
+        query = query.filter(post_slug.eq(s));
 
-        if let Some(i) = filter.user_id {
-            query = query.filter(user_id.eq(i));
+        if let Some(i) = filter.username {
+            query = query.filter(username.eq(i));
         }
         if let Some(i) = filter.text {
             query = query.filter(text.like(format!("%{}%", i)));

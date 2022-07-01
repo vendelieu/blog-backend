@@ -1,8 +1,8 @@
 table! {
     commentaries (id) {
         id -> Int4,
-        post_id -> Int4,
-        user_id -> Int4,
+        post_slug -> Varchar,
+        username -> Varchar,
         text -> Varchar,
         reply_to -> Nullable<Int4>,
         created_at -> Timestamp,
@@ -50,9 +50,6 @@ table! {
         created_at -> Timestamp,
     }
 }
-
-joinable!(commentaries -> posts (post_id));
-joinable!(commentaries -> users (user_id));
 
 allow_tables_to_appear_in_same_query!(
     commentaries,

@@ -17,7 +17,7 @@ pub struct PostFilter {
 
 #[derive(Debug, Deserialize)]
 pub struct CommentaryFilter {
-    pub user_id: Option<i32>,
+    pub username: Option<String>,
     pub text: Option<String>,
     pub reply_to: Option<i32>,
     pub date: Option<NaiveDateTime>,

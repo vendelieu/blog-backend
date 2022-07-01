@@ -20,14 +20,14 @@ pub async fn find_by_slug(
     }
 }
 
-#[post("/api/commentary/{id}")]
+#[post("/api/post/{slug}/commentary")]
 pub async fn insert(
-    p_id: web::Path<i32>,
+    p_slug: web::Path<String>,
     new_comment: web::Json<CommentaryDTO>,
     id: Identity,
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse> {
-    match commentaries_service::insert(p_id.into_inner(), new_comment.0, id, &pool) {
+    match commentaries_service::insert(p_slug.into_inner(), new_comment.0, id, &pool) {
         Ok(()) => Ok(HttpResponse::Created()
             .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
         Err(err) => Ok(err.response()),

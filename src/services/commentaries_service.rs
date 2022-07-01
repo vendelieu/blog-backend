@@ -26,7 +26,7 @@ pub fn filter_by_post_slug(
 }
 
 pub fn insert(
-    p_id: i32, new_comment: CommentaryDTO, id: Identity, pool: &web::Data<Pool>,
+    p_slug: String, new_comment: CommentaryDTO, id: Identity, pool: &web::Data<Pool>,
 ) -> Result<(), ServiceError> {
     let user = match user_service::handle_user_auth(id, &pool.get().unwrap()) {
         Ok(user) => user,
@@ -34,7 +34,7 @@ pub fn insert(
     };
 
     // check if post exists & open for comments
-    match Post::find_by_id(p_id.clone(), &pool.get().unwrap()) {
+    match Post::find_by_slug(&p_slug, &pool.get().unwrap()) {
         Ok(post) => if !post.commentaries_open {
             return Err(ServiceError::new(
                 StatusCode::INTERNAL_SERVER_ERROR,
@@ -48,8 +48,8 @@ pub fn insert(
     };
 
     match Commentary::insert(CommentaryFullDTO {
-        post_id: p_id,
-        user_id: user.id,
+        post_slug: p_slug,
+        username: user.username,
         text: new_comment.text,
         reply_to: new_comment.reply_to,
     }, &pool.get().unwrap()) {
@@ -75,7 +75,7 @@ pub fn update(
     match Commentary::find_by_id(comm_id, &pool.get().unwrap()) {
         Ok(comm) => {
             // check is user trying to update others comment
-            if comm.user_id != user.id {
+            if comm.username != user.username {
                 return Err(ServiceError::new(
                     StatusCode::INTERNAL_SERVER_ERROR,
                     consts::MESSAGE_CAN_NOT_UPDATE_DATA.to_string(),
@@ -93,8 +93,8 @@ pub fn update(
             }
 
             match Commentary::update(comm_id, CommentaryFullDTO {
-                post_id: comm.post_id,
-                user_id: comm.user_id,
+                post_slug: comm.post_slug,
+                username: comm.username,
                 text: updated_comment.text,
                 reply_to: updated_comment.reply_to,
             }, &pool.get().unwrap()) {
@@ -121,7 +121,7 @@ pub fn delete(id: i32, identity: Identity, pool: &web::Data<Pool>) -> Result<(),
     match Commentary::find_by_id(id, &pool.get().unwrap()) {
         Ok(comm) => {
             // check is user trying to delete others comment
-            if comm.user_id != user.id {
+            if comm.username != user.username {
                 return Err(ServiceError::new(
                     StatusCode::INTERNAL_SERVER_ERROR,
                     consts::MESSAGE_CAN_NOT_DELETE_DATA.to_string(),
