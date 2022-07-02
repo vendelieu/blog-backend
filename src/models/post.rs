@@ -1,16 +1,14 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
+use diesel::sql_query;
+use diesel::sql_types::Text;
 
 use crate::{
     configurations::db::Connection,
     models::pagination::SortingAndPaging,
     schema::post_tags_pivot::{dsl::post_tags_pivot, post_slug, tag_slug},
 };
-use crate::post_view_schema::post_view::{
-    self as p_view,
-    slug,
-    dsl::post_view
-};
+use crate::post_view_schema::post_view::{self as p_view, dsl::post_view, slug};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 use crate::utils::db_tag_type_wrapper::Tag;
 
@@ -94,6 +92,12 @@ impl Post {
                     .unwrap_or_else(|| crate::consts::EMPTY_STR.to_string()),
             )
             .load_and_count_items::<Post>(conn)
+    }
+
+    pub fn filter_related(s: String, conn: &Connection) -> QueryResult<Vec<NavPost>> {
+        sql_query("select title, slug from posts p left join post_tags_pivot ptp on p.slug = ptp.post_slug where ptp.tag_slug in (select tag_slug from post_tags_pivot where post_slug = $1) and p.slug != $1 limit 5")
+            .bind::<Text, _>(s)
+            .get_results::<NavPost>(conn)
     }
 
     pub fn insert(new_post: PostDTO, conn: &Connection) -> QueryResult<usize> {
