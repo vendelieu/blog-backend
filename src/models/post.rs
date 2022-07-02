@@ -12,7 +12,7 @@ use crate::post_view_schema::post_view::{self as p_view, dsl::post_view, slug};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 use crate::utils::db_tag_type_wrapper::Tag;
 
-use super::{filters::PostFilter, response::Page};
+use super::{filters::{PostFilter, Sort}, response::Page};
 
 #[derive(Queryable, Serialize, Deserialize, Debug)]
 pub struct Post {
@@ -72,6 +72,14 @@ impl Post {
             query = query.filter(p_view::updated_at.ge(i));
         }
 
+        let sort = match filter.sort_by {
+            Some(sort_type) => match sort_type {
+                Sort::Newest => "DESC",
+                Sort::Oldest => "ASC"
+            }
+            None => "DESC"
+        }.to_string();
+
         query
             .paginate(
                 filter
@@ -84,12 +92,8 @@ impl Post {
                     .unwrap_or(crate::consts::DEFAULT_PER_PAGE),
             )
             .sort(
-                filter
-                    .sort_by
-                    .unwrap_or_else(|| crate::consts::EMPTY_STR.to_string()),
-                filter
-                    .sort_direction
-                    .unwrap_or_else(|| crate::consts::EMPTY_STR.to_string()),
+                "updated_at".to_string(),
+                sort,
             )
             .load_and_count_items::<Post>(conn)
     }

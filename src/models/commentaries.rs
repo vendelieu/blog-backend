@@ -8,7 +8,7 @@ use crate::{
 };
 use diesel::prelude::*;
 
-use crate::models::filters::CommentaryFilter;
+use crate::models::filters::{CommentaryFilter, Sort};
 use crate::models::response::Page;
 
 
@@ -62,6 +62,14 @@ impl Commentary {
             query = query.filter(commentaries::updated_at.ge(i));
         }
 
+        let sort = match filter.sort_by {
+            Some(sort_type) => match sort_type {
+                Sort::Newest => "DESC",
+                Sort::Oldest => "ASC"
+            }
+            None => "DESC"
+        }.to_string();
+
         query
             .paginate(
                 filter
@@ -74,12 +82,8 @@ impl Commentary {
                     .unwrap_or(crate::consts::DEFAULT_PER_PAGE),
             )
             .sort(
-                filter
-                    .sort_by
-                    .unwrap_or_else(|| crate::consts::EMPTY_STR.to_string()),
-                filter
-                    .sort_direction
-                    .unwrap_or_else(|| crate::consts::EMPTY_STR.to_string()),
+                "created_at".to_string(),
+                sort,
             )
             .load_and_count_items::<Commentary>(conn)
     }

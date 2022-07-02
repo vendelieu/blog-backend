@@ -1,6 +1,14 @@
 use chrono::NaiveDateTime;
 use crate::validator::Validate;
 
+#[derive(Debug, Deserialize)]
+pub enum Sort {
+    #[serde(rename = "newest")]
+    Newest,
+    #[serde(rename = "oldest")]
+    Oldest
+}
+
 #[derive(Debug, Deserialize, Validate)]
 pub struct PostFilter {
     pub title: Option<String>,
@@ -9,8 +17,7 @@ pub struct PostFilter {
     pub tags: Option<String>,
     pub slug: Option<String>,
     pub date: Option<NaiveDateTime>,
-    pub sort_by: Option<String>,
-    pub sort_direction: Option<String>,
+    pub sort_by: Option<Sort>,
     pub page_num: Option<i64>,
     pub page_size: Option<i64>,
 }
@@ -21,8 +28,8 @@ pub struct CommentaryFilter {
     pub text: Option<String>,
     pub reply_to: Option<i32>,
     pub date: Option<NaiveDateTime>,
-    pub sort_by: Option<String>,
-    pub sort_direction: Option<String>,
+    pub sort_by: Option<Sort>,
     pub page_num: Option<i64>,
     pub page_size: Option<i64>,
 }
+// todo sort by & direction - del -> oldest newest
