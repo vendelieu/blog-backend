@@ -29,6 +29,16 @@ pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Resul
     }
 }
 
+#[get("/api/post/{slug}/related")]
+pub async fn find_related(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
+    match post_service::get_related(id.into_inner(), &pool) {
+        Ok(post) => Ok(HttpResponse::Ok().json(
+            ResponseBody::new(200, consts::MESSAGE_OK, post))
+        ),
+        Err(err) => Ok(err.response()),
+    }
+}
+
 #[post("/api/post")]
 pub async fn insert(
     new_post: web::Json<PostDTO>,

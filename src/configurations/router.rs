@@ -14,6 +14,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         // posts
         .service(post_controller::insert)
         .service(post_controller::find_by_slug)
+        .service(post_controller::find_related)
         .service(post_controller::update)
         .service(post_controller::delete)
         .service(post_controller::get_posts)

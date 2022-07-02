@@ -10,10 +10,12 @@ use diesel::sql_types::{Record, Text};
 #[postgres(type_name = "nav_post")]
 pub struct NavPostType;
 
-#[derive(Debug, PartialEq, FromSqlRow, AsExpression, Serialize, Deserialize)]
+#[derive(Debug, PartialEq, FromSqlRow, AsExpression, Serialize, Deserialize, QueryableByName)]
 #[sql_type = "NavPostType"]
 pub struct NavPost {
+    #[sql_type = "Text"]
     pub title: String,
+    #[sql_type = "Text"]
     pub slug: String,
 }
 

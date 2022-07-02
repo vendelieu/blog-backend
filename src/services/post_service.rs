@@ -11,6 +11,7 @@ use crate::{
 };
 use actix_identity::Identity;
 use actix_web::{http::StatusCode, web};
+use crate::utils::db_nav_post_type_wrapper::NavPost;
 
 pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<Post, ServiceError> {
     match Post::find_by_slug(&slug, &pool.get().unwrap()) {
@@ -30,6 +31,19 @@ pub fn filter(filter: PostFilter, pool: &web::Data<Pool>) -> Result<Page<Post>, 
         Ok(post) => Ok(post),
         Err(err) => {
             eprintln!("Error at fetching post data process: {}", err);
+            Err(ServiceError::new(
+                StatusCode::INTERNAL_SERVER_ERROR,
+                consts::MESSAGE_CAN_NOT_FETCH_DATA.to_string(),
+            ))
+        }
+    }
+}
+
+pub fn get_related(slug: String, pool: &web::Data<Pool>) -> Result<Vec<NavPost>, ServiceError> {
+    match Post::filter_related(slug, &pool.get().unwrap()) {
+        Ok(post) => Ok(post),
+        Err(err) => {
+            eprintln!("Error at fetching related post data process: {}", err);
             Err(ServiceError::new(
                 StatusCode::INTERNAL_SERVER_ERROR,
                 consts::MESSAGE_CAN_NOT_FETCH_DATA.to_string(),
