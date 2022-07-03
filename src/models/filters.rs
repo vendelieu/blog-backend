@@ -18,7 +18,7 @@ pub struct PostFilter {
     pub slug: Option<String>,
     pub date: Option<NaiveDateTime>,
     pub sort_by: Option<Sort>,
-    pub page_num: Option<i64>,
+    pub page: Option<i64>,
     pub page_size: Option<i64>,
 }
 
@@ -29,7 +29,6 @@ pub struct CommentaryFilter {
     pub reply_to: Option<i32>,
     pub date: Option<NaiveDateTime>,
     pub sort_by: Option<Sort>,
-    pub page_num: Option<i64>,
+    pub page: Option<i64>,
     pub page_size: Option<i64>,
 }
-// todo sort by & direction - del -> oldest newest

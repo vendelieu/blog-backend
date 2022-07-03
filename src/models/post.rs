@@ -83,7 +83,7 @@ impl Post {
         query
             .paginate(
                 filter
-                    .page_num
+                    .page
                     .unwrap_or(crate::consts::DEFAULT_PAGE_NUM),
             )
             .per_page(
