@@ -1,4 +1,4 @@
-# vendeli.eu-blog
+# vendeli.eu-blog backend
 
 Backend Api of my personal blog using rust + actix
 
