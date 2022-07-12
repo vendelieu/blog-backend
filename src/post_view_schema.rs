@@ -10,6 +10,7 @@ table! {
 
     post_view(id) {
         id -> Int4,
+        image -> Varchar,
         title -> Varchar,
         content -> Text,
         short_content -> Varchar,

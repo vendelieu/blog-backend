@@ -1,5 +1,6 @@
 CREATE VIEW post_view AS
 SELECT id,
+       image,
        title,
        content,
        short_content,

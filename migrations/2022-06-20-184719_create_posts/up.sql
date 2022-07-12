@@ -1,6 +1,7 @@
 create table posts
 (
     id                serial primary key,
+    image             varchar                     not null,
     title             varchar                     not null,
     content           text                        not null,
     short_content     varchar(140) generated always as (substring(content, 1, 140)) stored,

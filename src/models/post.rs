@@ -17,6 +17,7 @@ use super::{filters::{PostFilter, Sort}, response::Page};
 #[derive(Queryable, Serialize, Deserialize, Debug)]
 pub struct Post {
     pub id: i32,
+    pub image: String,
     pub title: String,
     pub content: String,
     pub short_content: String,

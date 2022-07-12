@@ -21,6 +21,7 @@ table! {
 table! {
     posts (id) {
         id -> Int4,
+        image -> Varchar,
         title -> Varchar,
         content -> Text,
         short_content -> Nullable<Varchar>,
