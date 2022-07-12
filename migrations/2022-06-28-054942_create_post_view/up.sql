@@ -11,6 +11,6 @@ SELECT id,
         where tags.slug in (select post_tags_pivot.tag_slug from post_tags_pivot where post_slug = posts.slug)
         limit 5)                                                                                         as "tags",
        (select (p.title, p.slug)::nav_post from posts as p where id < posts.id order by id desc limit 1) as "prev",
-       (select (p.title, p.slug)::nav_post from posts as p where id > posts.id limit 1)                  as "next",
+       (select (p.title, p.slug)::nav_post from posts as p where id > posts.id order by id limit 1) as "next",
        posts.updated_at
 from posts;
