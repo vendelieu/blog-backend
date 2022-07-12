@@ -3,7 +3,7 @@ SELECT id,
        image,
        title,
        content,
-       short_content,
+       description,
        slug,
        commentaries_open,
        (select array_agg((tags.id, name, tags.slug)::tag)

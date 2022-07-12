@@ -20,7 +20,7 @@ pub struct Post {
     pub image: String,
     pub title: String,
     pub content: String,
-    pub short_content: String,
+    pub description: String,
     pub slug: String,
     pub commentaries_open: bool,
     pub tags: Option<Vec<Tag>>,

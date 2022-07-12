@@ -4,7 +4,7 @@ create table posts
     image             varchar                     not null,
     title             varchar                     not null,
     content           text                        not null,
-    short_content     varchar(140) generated always as (substring(content, 1, 140)) stored,
+    description       varchar(140)                not null,
     slug              varchar                     not null unique,
     commentaries_open bool                        not null default true,
     updated_at        timestamp without time zone not null default now(),
