@@ -13,7 +13,7 @@ table! {
         image -> Varchar,
         title -> Varchar,
         content -> Text,
-        short_content -> Varchar,
+        description -> Varchar,
         slug -> Varchar,
         commentaries_open -> Bool,
         tags -> Nullable<Array<TagType>>,
