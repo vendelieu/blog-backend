@@ -24,7 +24,7 @@ table! {
         image -> Varchar,
         title -> Varchar,
         content -> Text,
-        short_content -> Nullable<Varchar>,
+        description -> Varchar,
         slug -> Varchar,
         commentaries_open -> Bool,
         updated_at -> Timestamp,
