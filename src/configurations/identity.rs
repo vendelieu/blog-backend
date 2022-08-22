@@ -8,6 +8,6 @@ pub fn get_config(domain: String) -> IdentityService<CookieIdentityPolicy> {
             .path("/")
             .domain(domain.as_str())
             .max_age_secs(chrono::Duration::days(1).num_seconds())
-            .secure(false), // this can only be true if you have https
+            .secure(true), // this can only be true if you have https
     )
 }
