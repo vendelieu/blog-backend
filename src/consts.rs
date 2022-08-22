@@ -19,7 +19,7 @@ pub const MESSAGE_INVALID_AUTH_DATA: &str = "Invalid auth data";
 pub const EMPTY: &str = "";
 
 // Default number of items per page
-pub const DEFAULT_PER_PAGE: i64 = 9;
+pub const DEFAULT_PER_PAGE: i64 = 6;
 
 // Default page number
 pub const DEFAULT_PAGE_NUM: i64 = 1;
