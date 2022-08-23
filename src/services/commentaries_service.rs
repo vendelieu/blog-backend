@@ -121,7 +121,7 @@ pub fn delete(id: i32, identity: Identity, pool: &web::Data<Pool>) -> Result<(),
     match Commentary::find_by_id(id, &pool.get().unwrap()) {
         Ok(comm) => {
             // check is user trying to delete others comment
-            if comm.username != user.username {
+            if comm.username != user.username || user.is_admin {
                 return Err(ServiceError::new(
                     StatusCode::INTERNAL_SERVER_ERROR,
                     consts::MESSAGE_CAN_NOT_DELETE_DATA.to_string(),
