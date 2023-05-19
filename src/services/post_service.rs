@@ -7,9 +7,7 @@ use crate::{
         post::{Post, PostDTO},
         response::Page,
     },
-    services::user_service,
 };
-use actix_identity::Identity;
 use actix_web::{http::StatusCode, web};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 
@@ -52,11 +50,7 @@ pub fn get_related(slug: String, pool: &web::Data<Pool>) -> Result<Vec<NavPost>,
     }
 }
 
-pub fn insert(new_post: PostDTO, id: Identity, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        id, &pool.get().unwrap(),
-    ) { return Err(err); }
-
+pub fn insert(new_post: PostDTO, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
     match Post::insert(new_post, &pool.get().unwrap()) {
         Ok(_) => Ok(()),
         Err(err) => {
@@ -72,13 +66,8 @@ pub fn insert(new_post: PostDTO, id: Identity, pool: &web::Data<Pool>) -> Result
 pub fn update(
     id: i32,
     updated_post: PostDTO,
-    identity: Identity,
     pool: &web::Data<Pool>,
 ) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        identity, &pool.get().unwrap(),
-    ) { return Err(err); }
-
     match Post::find_by_id(id, &pool.get().unwrap()) {
         Ok(_) => match Post::update(id, updated_post, &pool.get().unwrap()) {
             Ok(_) => Ok(()),
@@ -102,11 +91,7 @@ pub fn update(
     }
 }
 
-pub fn delete(id: i32, identity: Identity, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        identity, &pool.get().unwrap(),
-    ) { return Err(err); }
-
+pub fn delete(id: i32, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
     match Post::find_by_id(id, &pool.get().unwrap()) {
         Ok(_) => match Post::delete(id, &pool.get().unwrap()) {
             Ok(_) => Ok(()),

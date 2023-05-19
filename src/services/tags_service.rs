@@ -1,14 +1,13 @@
+use actix_web::{http::StatusCode, web};
+
 use crate::{
     configurations::db::Pool,
     consts,
-    utils::error_handling::ServiceError,
     models::{
         tags::{Tag, TagDTO},
     },
-    services::user_service,
+    utils::error_handling::ServiceError,
 };
-use actix_identity::Identity;
-use actix_web::{http::StatusCode, web};
 
 pub fn find_all(pool: &web::Data<Pool>) -> Result<Vec<Tag>, ServiceError> {
     match Tag::find_all(&pool.get().unwrap()) {
@@ -40,11 +39,7 @@ pub fn find_by_post_slug(slug: String, pool: &web::Data<Pool>) -> Result<Vec<Tag
     }
 }
 
-pub fn insert(new_post: TagDTO, id: Identity, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        id, &pool.get().unwrap(),
-    ) { return Err(err); }
-
+pub fn insert(new_post: TagDTO, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
     match Tag::insert(new_post, &pool.get().unwrap()) {
         Ok(_) => Ok(()),
         Err(_) => Err(ServiceError::new(
@@ -57,13 +52,8 @@ pub fn insert(new_post: TagDTO, id: Identity, pool: &web::Data<Pool>) -> Result<
 pub fn update(
     id: i32,
     updated_post: TagDTO,
-    identity: Identity,
     pool: &web::Data<Pool>,
 ) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        identity, &pool.get().unwrap(),
-    ) { return Err(err); }
-
     match Tag::find_by_id(id, &pool.get().unwrap()) {
         Ok(_) => match Tag::update(id, updated_post, &pool.get().unwrap()) {
             Ok(_) => Ok(()),
@@ -79,11 +69,7 @@ pub fn update(
     }
 }
 
-pub fn delete(id: i32, identity: Identity, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
-    if let Err(err) = user_service::check_is_admin(
-        identity, &pool.get().unwrap(),
-    ) { return Err(err); }
-
+pub fn delete(id: i32, pool: &web::Data<Pool>) -> Result<(), ServiceError> {
     match Tag::find_by_id(id, &pool.get().unwrap()) {
         Ok(_) => match Tag::delete(id, &pool.get().unwrap()) {
             Ok(_) => Ok(()),

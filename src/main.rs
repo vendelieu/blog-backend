@@ -4,7 +4,6 @@ extern crate actix_cors;
 extern crate actix_rt;
 #[macro_use]
 extern crate actix_web;
-extern crate bcrypt;
 extern crate derive_more;
 #[macro_use]
 extern crate diesel;
@@ -61,7 +60,7 @@ async fn main() -> io::Result<()> {
 
     let pool = configurations::db::migrate_and_config(&connection_url);
 
-    let mut builder = SslAcceptor::mozilla_intermediate(SslMethod::tls()).unwrap();
+    let mut builder = SslAcceptor::mozilla_intermediate_v5(SslMethod::tls()).unwrap();
     builder.set_private_key_file(ssl_key, SslFiletype::PEM).unwrap();
     builder.set_certificate_chain_file(ssl_cert).unwrap();
 
@@ -72,7 +71,6 @@ async fn main() -> io::Result<()> {
             // enable rate-limiting middleware
             .wrap(Governor::new(&rate_limiting_governor::get_governor()))
             .app_data(Data::new(pool.clone()))
-            .wrap(configurations::identity::get_config(domain.to_string()))
             .app_data(web::JsonConfig::default().limit(4096))
             .wrap(configurations::cors::get_config())
             .configure(configurations::router::configure)
