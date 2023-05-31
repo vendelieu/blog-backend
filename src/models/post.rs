@@ -1,6 +1,8 @@
 use std::env;
 
-use chrono::{Datelike, Utc, NaiveDateTime, TimeZone};
+use actix_web::cookie::time::format_description::well_known::Rfc2822;
+use actix_web::cookie::time::OffsetDateTime;
+use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use diesel::sql_query;
 use diesel::sql_types::Text;
@@ -127,14 +129,13 @@ impl Post {
 
 impl From<Post> for Item {
     fn from(value: Post) -> Self {
-        let dt = value.updated_at;
-        // rss feeds require rfc2822 format
-        let dt = Utc::with_ymd_and_hms(&Utc, dt.year(), dt.month(), dt.day(), 0, 0, 0);
-        let dt = dt.unwrap();
+        let dt = OffsetDateTime::from_unix_timestamp(
+            value.updated_at.timestamp()
+        ).unwrap().format(&Rfc2822).unwrap();
 
         let mut item = Item::default();
         item.set_title(value.title.clone());
-        item.set_pub_date(dt.to_rfc2822());
+        item.set_pub_date(dt);
         item.set_link(env::var("BLOG_URL").unwrap() + "/" + value.slug.as_str());
         // unique id for each post across the site
         let mut guid = Guid::default();
