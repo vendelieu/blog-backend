@@ -1,6 +1,6 @@
 use std::env;
 
-use chrono::{Datelike, NaiveDateTime, TimeZone};
+use chrono::{Datelike, Utc, NaiveDateTime, TimeZone};
 use diesel::prelude::*;
 use diesel::sql_query;
 use diesel::sql_types::Text;
@@ -129,9 +129,7 @@ impl From<Post> for Item {
     fn from(value: Post) -> Self {
         let dt = value.updated_at;
         // rss feeds require rfc2822 format
-        let dt = chrono::Utc.with_ymd_and_hms(
-            dt.year(), dt.month(), dt.day(), 0, 0, 0,
-        );
+        let dt = Utc::with_ymd_and_hms(&Utc, dt.year(), dt.month(), dt.day(), 0, 0, 0);
         let dt = dt.unwrap();
 
         let mut item = Item::default();
