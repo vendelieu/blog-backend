@@ -1,7 +1,10 @@
-use chrono::NaiveDateTime;
+use std::env;
+
+use chrono::{Datelike, NaiveDateTime, TimeZone};
 use diesel::prelude::*;
 use diesel::sql_query;
 use diesel::sql_types::Text;
+use rss::{Guid, Item};
 
 use crate::{
     configurations::db::Connection,
@@ -119,5 +122,27 @@ impl Post {
 
     pub fn delete(i: i32, conn: &Connection) -> QueryResult<usize> {
         diesel::delete(post_view.find(i)).execute(conn)
+    }
+}
+
+impl From<Post> for Item {
+    fn from(value: Post) -> Self {
+        let dt = value.updated_at;
+        // rss feeds require rfc2822 format
+        let dt = chrono::Utc.with_ymd_and_hms(
+            dt.year(), dt.month(), dt.day(), 0, 0, 0,
+        );
+        let dt = dt.unwrap();
+
+        let mut item = Item::default();
+        item.set_title(value.title.clone());
+        item.set_pub_date(dt.to_rfc2822());
+        item.set_link(env::var("BLOG_URL").unwrap() + "/" + value.slug.as_str());
+        // unique id for each post across the site
+        let mut guid = Guid::default();
+        guid.set_value(&value.slug);
+        item.set_guid(guid);
+
+        item
     }
 }

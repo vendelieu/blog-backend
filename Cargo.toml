@@ -25,6 +25,8 @@ validator = { version = "0.16.0", features = ["derive"] }
 
 uuid = { version = "1.1.2", features = ["serde", "v4"] }
 
+rss = "2.0"
+
 #serde
 serde = "1.0.137"
 serde_derive = "1.0.137"

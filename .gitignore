@@ -1,5 +1,4 @@
 /target
-/src/secret.key
 /.idea/
 /.env
 /Cargo.lock
