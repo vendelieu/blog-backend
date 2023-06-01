@@ -11,6 +11,7 @@ actix-rt = "2.7.0"
 actix-service = "2.0.2"
 actix-cors = "0.6.1"
 actix-governor = "0.4.0"
+actix-ip-filter = "0.3.1"
 
 chrono = { version = "0.4.19", features = ["serde"] }
 dotenv = "0.15.0"

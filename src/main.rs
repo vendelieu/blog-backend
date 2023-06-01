@@ -24,6 +24,7 @@ extern crate validator;
 use std::{env, io};
 
 use actix_governor::Governor;
+use actix_ip_filter::IPFilter;
 use actix_web::{App, HttpServer, web};
 use actix_web::middleware::Logger;
 use actix_web::web::Data;
@@ -70,6 +71,10 @@ async fn main() -> io::Result<()> {
             .wrap(Logger::default())
             // enable rate-limiting middleware
             .wrap(Governor::new(&rate_limiting_governor::get_governor()))
+            .wrap(IPFilter::new()
+                .allow(vec![env::var("ADMIN_IP").unwrap().as_str()])
+                .limit_to(vec!["/api/admin/*"])
+            )
             .app_data(Data::new(pool.clone()))
             .app_data(web::JsonConfig::default().limit(4096))
             .wrap(configurations::cors::get_config())
