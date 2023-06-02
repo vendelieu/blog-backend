@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine3.18
+    container_name: blog-db
+    command: [ postgres, -c, log_statement=all ]
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+    environment:
+      DEBUG: "false"
+      POSTGRES_USER: blog
+      POSTGRES_PASSWORD: blog
+      POSTGRES_DB: blog
+    volumes: [ ./containerData:/var/lib/postgresql/data ]
+    tmpfs: [ "/var/run/postgresql:uid=70,gid=70", "/tmp" ]
+    read_only: true
+    network_mode: host

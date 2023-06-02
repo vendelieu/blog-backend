@@ -18,6 +18,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         .service(tag_controller::find_by_post_slug)
 
         // admin
+        .service(main_controller::check_admin_status)
         .service(tag_admin_controller::delete)
         .service(tag_admin_controller::insert)
         .service(tag_admin_controller::update)

@@ -9,6 +9,5 @@ pub fn get_config() -> Cors {
         .allowed_origin("https://vendeli.eu")
         .allowed_methods(vec!["GET", "POST", "PUT", "DELETE"])
         .allowed_headers(vec![ACCEPT, CONTENT_TYPE])
-        .supports_credentials()
         .max_age(3600)
 }

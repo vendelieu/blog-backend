@@ -19,3 +19,8 @@ pub async fn rss(
 ) -> HttpResponse {
     HttpResponse::Ok().body(rss_service::get_feed(filter, &pool).await)
 }
+
+#[get("/api/admin/check")]
+pub async fn check_admin_status() -> HttpResponse {
+    HttpResponse::Ok().finish()
+}
