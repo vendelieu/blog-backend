@@ -16,9 +16,9 @@ pub async fn find_all(pool: web::Data<Pool>) -> Result<HttpResponse> {
     }
 }
 
-#[get("/api/tag/{slug}")]
-pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
-    match tags_service::find_by_slug(id.into_inner(), &pool) {
+#[get("/api/tag/{name}")]
+pub async fn find_by_name(name: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
+    match tags_service::find_by_name(name.into_inner(), &pool) {
         Ok(tag) => Ok(HttpResponse::Ok().json(
             ResponseBody::new(200, consts::MESSAGE_OK, tag))
         ),
@@ -27,8 +27,8 @@ pub async fn find_by_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Resul
 }
 
 #[get("/api/post/{slug}/tags")]
-pub async fn find_by_post_slug(id: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
-    match tags_service::find_by_post_slug(id.into_inner(), &pool) {
+pub async fn find_by_post_slug(slug: web::Path<String>, pool: web::Data<Pool>) -> Result<HttpResponse> {
+    match tags_service::find_by_post_slug(slug.into_inner(), &pool) {
         Ok(tags) => Ok(HttpResponse::Ok().json(
             ResponseBody::new(200, consts::MESSAGE_OK, tags))
         ),

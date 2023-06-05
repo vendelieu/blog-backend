@@ -37,8 +37,8 @@ impl Tag {
         tags.find(i).get_result::<Tag>(conn)
     }
 
-    pub fn find_by_slug(s: &str, conn: &Connection) -> QueryResult<Tag> {
-        tags.filter(slug.eq(s)).get_result::<Tag>(conn)
+    pub fn find_by_name(s: &str, conn: &Connection) -> QueryResult<Vec<Tag>> {
+        tags.filter(name.ilike(format!("%{}%", s))).load::<Tag>(conn)
     }
 
     pub fn find_by_post_slug(s: &str, conn: &Connection) -> QueryResult<Vec<Tag>> {

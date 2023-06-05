@@ -19,12 +19,12 @@ pub fn find_all(pool: &web::Data<Pool>) -> Result<Vec<Tag>, ServiceError> {
     }
 }
 
-pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<Tag, ServiceError> {
-    match Tag::find_by_slug(&slug, &pool.get().unwrap()) {
+pub fn find_by_name(name: String, pool: &web::Data<Pool>) -> Result<Vec<Tag>, ServiceError> {
+    match Tag::find_by_name(&name, &pool.get().unwrap()) {
         Ok(post) => Ok(post),
         Err(_) => Err(ServiceError::new(
             StatusCode::NOT_FOUND,
-            format!("Tag with slug {} not found", &slug),
+            format!("Tag with name {} not found", &name),
         )),
     }
 }

@@ -14,7 +14,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         .service(post_controller::get_posts)
         // tags
         .service(tag_controller::find_all)
-        .service(tag_controller::find_by_slug)
+        .service(tag_controller::find_by_name)
         .service(tag_controller::find_by_post_slug)
 
         // admin

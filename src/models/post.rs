@@ -16,6 +16,7 @@ use crate::{
 use crate::post_view_schema::post_view::{self as p_view, dsl::post_view, slug};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 use crate::utils::db_tag_type_wrapper::Tag;
+use validator::Validate;
 
 use super::{filters::{PostFilter, Sort}, response::Page};
 
@@ -34,12 +35,19 @@ pub struct Post {
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Insertable, AsChangeset, Serialize, Deserialize)]
+#[derive(Insertable, AsChangeset, Serialize, Deserialize, Validate)]
 #[table_name = "p_view"]
 pub struct PostDTO {
+    #[validate(url)]
+    pub image: String,
+    #[validate(length(min = 2, max = 20))]
     pub title: String,
+    #[validate(length(min = 2, max = 4024))]
     pub content: String,
-    pub commentaries_open: bool,
+    #[validate(length(min = 2, max = 140))]
+    pub description: String,
+    pub commentaries_open: Option<bool>,
+    #[validate(length(min = 1, max = 10))]
     pub slug: String,
 }
 
