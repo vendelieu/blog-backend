@@ -145,7 +145,6 @@ impl From<Post> for Item {
         item.set_title(value.title.clone());
         item.set_pub_date(dt);
         item.set_description(value.description);
-        item.set_content(value.content);
         item.set_link(env::var("BLOG_URL").unwrap() + "/" + value.slug.as_str());
         // unique id for each post across the site
         let mut guid = Guid::default();
