@@ -19,7 +19,7 @@ pub async fn insert(
     }
 }
 
-#[post("/api/admin/post/{id}")]
+#[put("/api/admin/post/{id}")]
 pub async fn update(
     id: web::Path<i32>,
     updated_post: web::Json<PostDTO>,
@@ -35,7 +35,7 @@ pub async fn update(
     }
 }
 
-#[post("/api/admin/post/delete/{id}")]
+#[delete("/api/admin/post/{id}")]
 pub async fn delete(
     id: web::Path<i32>,
     pool: web::Data<Pool>,
