@@ -1,14 +1,15 @@
+use actix_web::{http::StatusCode, web};
+
 use crate::{
     configurations::db::Pool,
     consts,
-    utils::error_handling::ServiceError,
     models::{
         filters::PostFilter,
         post::{Post, PostDTO},
         response::Page,
     },
+    utils::error_handling::ServiceError,
 };
-use actix_web::{http::StatusCode, web};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 
 pub fn find_by_slug(slug: String, pool: &web::Data<Pool>) -> Result<Post, ServiceError> {

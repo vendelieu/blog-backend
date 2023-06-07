@@ -1,4 +1,5 @@
 use chrono::NaiveDateTime;
+
 use crate::validator::Validate;
 
 #[derive(Debug, Deserialize)]

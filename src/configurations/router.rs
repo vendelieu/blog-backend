@@ -21,6 +21,8 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         .service(main_controller::check_admin_status)
         .service(tag_admin_controller::delete)
         .service(tag_admin_controller::insert)
+        .service(tag_admin_controller::link)
+        .service(tag_admin_controller::unlink)
         .service(tag_admin_controller::update)
         .service(tag_admin_controller::delete)
         .service(post_admin_controller::insert)

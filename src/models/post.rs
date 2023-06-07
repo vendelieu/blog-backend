@@ -7,6 +7,7 @@ use diesel::prelude::*;
 use diesel::sql_query;
 use diesel::sql_types::Text;
 use rss::{Guid, Item};
+use validator::Validate;
 
 use crate::{
     configurations::db::Connection,
@@ -16,7 +17,6 @@ use crate::{
 use crate::post_view_schema::post_view::{self as p_view, dsl::post_view, slug};
 use crate::utils::db_nav_post_type_wrapper::NavPost;
 use crate::utils::db_tag_type_wrapper::Tag;
-use validator::Validate;
 
 use super::{filters::{PostFilter, Sort}, response::Page};
 

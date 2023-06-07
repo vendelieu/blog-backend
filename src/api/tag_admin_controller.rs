@@ -3,7 +3,7 @@ use actix_web::{HttpResponse, Result, web};
 use crate::configurations::db::Pool;
 use crate::consts;
 use crate::models::response::ResponseBody;
-use crate::models::tags::TagDTO;
+use crate::models::tags::{PostTagsPivot, TagDTO};
 use crate::services::tags_service;
 
 #[post("/api/admin/tag")]
@@ -12,6 +12,31 @@ pub async fn insert(
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse> {
     match tags_service::insert(new_tag.0, &pool) {
+        Ok(()) => Ok(HttpResponse::Created()
+            .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
+        Err(err) => Ok(err.response()),
+    }
+}
+
+#[put("/api/admin/tag")]
+pub async fn link(
+    new_pivot: web::Json<PostTagsPivot>,
+    pool: web::Data<Pool>,
+) -> Result<HttpResponse> {
+    match tags_service::link(new_pivot.0, &pool) {
+        Ok(()) => Ok(HttpResponse::Created()
+            .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
+        Err(err) => Ok(err.response()),
+    }
+}
+
+#[delete("/api/admin/tag/{slug}/{post_slug}")]
+pub async fn unlink(
+    slugs: web::Path<(String, String)>,
+    pool: web::Data<Pool>,
+) -> Result<HttpResponse> {
+    let slugs = slugs.into_inner();
+    match tags_service::unlink(slugs.0, slugs.1, &pool) {
         Ok(()) => Ok(HttpResponse::Created()
             .json(ResponseBody::new(200, consts::MESSAGE_OK, consts::EMPTY))),
         Err(err) => Ok(err.response()),

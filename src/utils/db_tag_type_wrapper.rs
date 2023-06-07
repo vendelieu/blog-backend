@@ -1,4 +1,5 @@
 use std::io::Write;
+
 use diesel::{deserialize, serialize};
 use diesel::deserialize::FromSql;
 use diesel::pg::Pg;

@@ -1,10 +1,11 @@
+use actix_web::{HttpResponse, Result, web};
+
 use crate::{
     configurations::db::Pool,
     consts,
     models::response::ResponseBody,
     services::tags_service,
 };
-use actix_web::{web, HttpResponse, Result};
 
 #[get("/api/tags")]
 pub async fn find_all(pool: web::Data<Pool>) -> Result<HttpResponse> {
