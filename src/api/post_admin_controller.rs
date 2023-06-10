@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Result, web};
+use actix_web_validator::Json;
 
 use crate::{
     configurations::db::Pool,
@@ -9,7 +10,7 @@ use crate::{
 
 #[post("/api/admin/post")]
 pub async fn insert(
-    new_post: web::Json<PostDTO>,
+    new_post: Json<PostDTO>,
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse> {
     match post_service::insert(new_post.0, &pool) {
@@ -22,7 +23,7 @@ pub async fn insert(
 #[put("/api/admin/post/{id}")]
 pub async fn update(
     id: web::Path<i32>,
-    updated_post: web::Json<PostDTO>,
+    updated_post: Json<PostDTO>,
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse> {
     match post_service::update(id.into_inner(), updated_post.0, &pool) {

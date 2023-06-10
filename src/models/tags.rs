@@ -1,5 +1,6 @@
 use diesel::prelude::*;
 use diesel::QueryResult;
+use validator::Validate;
 
 use crate::{
     configurations::db::Connection,
@@ -15,14 +16,16 @@ pub struct Tag {
     pub slug: String,
 }
 
-#[derive(Insertable, AsChangeset, Serialize, Deserialize)]
+#[derive(Insertable, AsChangeset, Serialize, Deserialize, Validate)]
 #[table_name = "tags"]
 pub struct TagDTO {
+    #[validate(length(min = 2, max = 15))]
     pub name: String,
+    #[validate(length(min = 2, max = 15))]
     pub slug: String,
 }
 
-#[derive(Insertable, Serialize, Deserialize)]
+#[derive(Insertable, Serialize, Deserialize, Validate)]
 #[table_name = "post_tags_pivot"]
 pub struct PostTagsPivot {
     pub post_slug: String,

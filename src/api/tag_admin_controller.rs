@@ -1,4 +1,5 @@
 use actix_web::{HttpResponse, Result, web};
+use actix_web_validator::Json;
 
 use crate::configurations::db::Pool;
 use crate::consts;
@@ -8,7 +9,7 @@ use crate::services::tags_service;
 
 #[post("/api/admin/tag")]
 pub async fn insert(
-    new_tag: web::Json<TagDTO>,
+    new_tag: Json<TagDTO>,
     pool: web::Data<Pool>,
 ) -> Result<HttpResponse> {
     match tags_service::insert(new_tag.0, &pool) {

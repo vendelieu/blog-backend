@@ -47,7 +47,7 @@ pub struct PostDTO {
     #[validate(length(min = 2, max = 140))]
     pub description: String,
     pub commentaries_open: Option<bool>,
-    #[validate(length(min = 1, max = 10))]
+    #[validate(length(min = 2, max = 15))]
     pub slug: String,
 }
 
