@@ -42,7 +42,7 @@ pub struct PostDTO {
     pub image: String,
     #[validate(length(min = 2, max = 20))]
     pub title: String,
-    #[validate(length(min = 2, max = 4024))]
+    #[validate(length(min = 2))]
     pub content: String,
     #[validate(length(min = 2, max = 140))]
     pub description: String,
