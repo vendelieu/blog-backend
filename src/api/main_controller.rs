@@ -6,6 +6,7 @@ use crate::{
     models::filters::PostFilter,
     services::rss_service,
 };
+use crate::services::sitemap_service;
 
 #[get("/")]
 pub async fn index() -> HttpResponse {
@@ -18,6 +19,13 @@ pub async fn rss(
     pool: web::Data<Pool>,
 ) -> HttpResponse {
     HttpResponse::Ok().body(rss_service::get_feed(filter, &pool).await)
+}
+
+#[get("/sitemap")]
+pub async fn sitemap(
+    pool: web::Data<Pool>,
+) -> HttpResponse {
+    HttpResponse::Ok().body(sitemap_service::get_sitemap(&pool).await)
 }
 
 #[get("/api/admin/check")]

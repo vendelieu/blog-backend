@@ -8,6 +8,7 @@ pub fn configure(cfg: &mut web::ServiceConfig) {
         //main
         .service(main_controller::index)
         .service(main_controller::rss)
+        .service(main_controller::sitemap)
         // posts
         .service(post_controller::find_by_slug)
         .service(post_controller::find_related)
