@@ -46,7 +46,7 @@ pub async fn get_sitemap(pool: &Data<Pool>) -> String {
     let posts_entries: Vec<UrlEntry> = posts.into_iter().map(|i|
         UrlEntry {
             loc: format!("https://vendeli.eu/{}", i.slug).parse().unwrap(),
-            changefreq: Some(ChangeFreq::Never),
+            changefreq: Some(ChangeFreq::Yearly),
             priority: Some(0.7),
             lastmod: Some(Utc.from_utc_datetime(&i.updated_at)),
         }
