@@ -18,14 +18,16 @@ pub async fn rss(
     Query(filter): Query<PostFilter>,
     pool: web::Data<Pool>,
 ) -> HttpResponse {
-    HttpResponse::Ok().body(rss_service::get_feed(filter, &pool).await)
+    HttpResponse::Ok().content_type("application/xml")
+        .body(rss_service::get_feed(filter, &pool).await)
 }
 
 #[get("/sitemap")]
 pub async fn sitemap(
     pool: web::Data<Pool>,
 ) -> HttpResponse {
-    HttpResponse::Ok().body(sitemap_service::get_sitemap(&pool).await)
+    HttpResponse::Ok().content_type("application/xml")
+        .body(sitemap_service::get_sitemap(&pool).await)
 }
 
 #[get("/api/admin/check")]
