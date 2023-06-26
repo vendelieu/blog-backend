@@ -40,14 +40,14 @@ pub struct Post {
 pub struct PostDTO {
     #[validate(url)]
     pub image: String,
-    #[validate(length(min = 2, max = 20))]
+    #[validate(length(min = 2, max = 64))]
     pub title: String,
     #[validate(length(min = 2))]
     pub content: String,
-    #[validate(length(min = 2, max = 140))]
+    #[validate(length(min = 2, max = 256))]
     pub description: String,
     pub commentaries_open: Option<bool>,
-    #[validate(length(min = 2, max = 15))]
+    #[validate(length(min = 2, max = 64))]
     pub slug: String,
 }
 
