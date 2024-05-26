@@ -40,7 +40,7 @@ pub struct Post {
 pub struct PostDTO {
     #[validate(url)]
     pub image: String,
-    #[validate(length(min = 2, max = 64))]
+    #[validate(length(min = 2, max = 128))]
     pub title: String,
     #[validate(length(min = 2))]
     pub content: String,
