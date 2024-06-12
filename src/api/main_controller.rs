@@ -26,7 +26,7 @@ pub async fn rss(
 pub async fn sitemap(
     pool: web::Data<Pool>,
 ) -> HttpResponse {
-    HttpResponse::Ok().content_type("application/xml")
+    HttpResponse::Ok().content_type("text/xml; charset=UTF-8")
         .body(sitemap_service::get_sitemap(&pool).await)
 }
 
